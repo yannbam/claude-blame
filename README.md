@@ -1,3 +1,4 @@
+```text
   / ____| |               | |      |  _ \| |                     
  | |    | | __ _ _   _  __| | ___  | |_) | | __ _ _ __ ___   ___ 
  | |    | |/ _` | | | |/ _` |/ _ \ |  _ <| |/ _` | '_ ` _ \ / _ \
@@ -5,7 +6,7 @@
   \_____|_|\__,_|\__,_|\__,_|\___| |____/|_|\__,_|_| |_| |_|\___|
                                                                    
   🔍 Finding which Claude instance wrote that shit! 🔍
-
+```
 Find git commits in conversations.json
 
 usage: claude-blame [-h] [--conversations CONVERSATIONS] [--full] commit_hash
