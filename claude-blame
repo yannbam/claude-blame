@@ -46,7 +46,7 @@ def find_git_commit_in_content(content_items: List[Dict], commit_hash: str) -> O
     
     for i, item in enumerate(content_items):
         # Look for git commit tool use
-        if item.get('type') == 'tool_use' and item.get('name') == 'koding-stable:BashTool':
+        if item.get('type') == 'tool_use':
             command = item.get('input', {}).get('command', '')
             
             # Check if this is a git commit command
