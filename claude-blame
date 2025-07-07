@@ -47,10 +47,11 @@ def find_git_commit_in_content(content_items: List[Dict], commit_hash: str) -> O
     for i, item in enumerate(content_items):
         # Look for git commit tool use
         if item.get('type') == 'tool_use':
-            command = item.get('input', {}).get('command', '')
+            # Convert entire tool_use item to string and search for git commit
+            tool_use_str = json.dumps(item, default=str)
             
-            # Check if this is a git commit command
-            if 'git commit' in command:
+            # Check if this tool call mentions git commit
+            if 'git commit' in tool_use_str:
                 # Look for the corresponding tool_result
                 if i + 1 < len(content_items) and content_items[i + 1].get('type') == 'tool_result':
                     result = content_items[i + 1]
@@ -70,8 +71,13 @@ def find_git_commit_in_content(content_items: List[Dict], commit_hash: str) -> O
                             found_hash = match.group(1)
                             # Check if this matches our search (partial match)
                             if commit_hash.lower() in found_hash.lower() or found_hash.lower().startswith(commit_hash.lower()[:7]):
+                                # Extract tool name and input for clean display
+                                tool_name = item.get('name', 'unknown')
+                                tool_input = item.get('input', {})
+                                
                                 commit_info = {
-                                    'command': command,
+                                    'tool_name': tool_name,
+                                    'tool_input': tool_input,
                                     'output': output_text,
                                     'hash': found_hash,
                                     'tool_index': i
@@ -193,7 +199,9 @@ def display_results(results: List[Dict], commit_hash: str):
         
         print(f"\n{GREEN}📝 Commit Details:{RESET}")
         print(f"  {CYAN}Commit Hash:{RESET} {commit['hash']}")
-        print(f"  {CYAN}Git Command:{RESET} {commit['command'][:100]}...")
+        print(f"  {CYAN}Tool Name:{RESET} {commit['tool_name']}")
+        input_preview = str(commit['tool_input'])[:500].replace('\n', '\n  ')
+        print(f"  {CYAN}Input:{RESET} {input_preview}...")
         
         print(f"\n{GREEN}💬 Message Info:{RESET}")
         print(f"  {CYAN}Message UUID:{RESET} {msg['uuid']}")
